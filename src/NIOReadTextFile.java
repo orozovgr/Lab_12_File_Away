@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 
 import static java.nio.file.StandardOpenOption.CREATE;
 
@@ -22,6 +23,10 @@ public class NIOReadTextFile
         JFileChooser chooser = new JFileChooser();
         File selectedFile;
         String rec = "";
+        String  fileName = "";
+
+
+
         
        try {
            // uses a fixed known path:
@@ -42,6 +47,7 @@ public class NIOReadTextFile
            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                selectedFile = chooser.getSelectedFile();
                Path file = selectedFile.toPath();
+               fileName = file.getFileName().toString();
                // Typical java pattern of inherited classes
                // we wrap a BufferedWriter around a lower level BufferedOutputStream
                InputStream in =
@@ -51,14 +57,27 @@ public class NIOReadTextFile
 
                // Finally we can read the file LOL!
                int line = 0;
+               int wordCount = 0;
+               int characterCount = 0;
                while (reader.ready()) {
                    rec = reader.readLine();
                    line++;
                    // echo to screen
                    System.out.printf("\nLine %4d %-60s ", line, rec);
+                   String[] words = rec.split(", ");
+                   wordCount += words.length;
+                   for(int i=0; i<words.length; i++){
+                       characterCount += words[i].length();
+                   }
+
+
                }
                reader.close(); // must close the file to seal it and flush buffer
                System.out.println("\n\nData file read!");
+               System.out.println("The name of the file is " + fileName);
+               System.out.println("The number of the lines in the file is " + line);
+               System.out.println("The number of the words in the file is " + wordCount);
+               System.out.println("The number of the characters in the file is " + characterCount);
 
 
            } else  // User closed the chooser without selecting a file
